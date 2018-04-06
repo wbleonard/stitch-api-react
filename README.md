@@ -1,4 +1,4 @@
-# Using Stitch to Create a Microservices API Library
+# Using MongoDB Stitch to Create a Microservices API Library
 
 [Stitch](https://www.mongodb.com/cloud/stitch) is MongoDB's Backend as a Service offering - that is, Stitch can be the single point of contact for developers accessing your platform (whatever that platform may be). 
 
@@ -361,6 +361,7 @@ And now our React Sports Store is dynamic, calling an API to refresh its content
 If you just want to see the app in action, simply clone this repository and run the app:
 
     git clone https://github.com/wbleonard/stitch-api-react.git
+    npm install
     npm start
  
  ## Troublshooting
