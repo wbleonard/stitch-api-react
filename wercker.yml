@@ -1,0 +1,23 @@
+# Use Node as the base container. Like FROM in Dockerfile.
+box: node
+
+# This Pipeline is run whenever a new git commit is pushed.
+build:
+  steps:
+    # A step that executes `npm install` command
+    - npm-install
+
+# This pipeline will be chained to start at the end of a build pipeline in the
+# Wercker Web Workflows editor.
+push-to-dockerhub:
+  steps:
+    - internal/docker-push:
+        username: $USERNAME
+        password: $PASSWORD
+        tag: development
+        working-dir: /pipeline/source # For some reason this isn't the default
+        cmd: "npm start"
+        ports: "3000"
+        repository: wbleonard/stitch-api-react
+        registry: https://registry.hub.docker.com
+
