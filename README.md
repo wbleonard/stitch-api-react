@@ -1,3 +1,5 @@
+[![wercker status](https://app.wercker.com/status/f735a1c4de22d30744cd74355e690fa5/s/master "wercker status")](https://app.wercker.com/project/byKey/f735a1c4de22d30744cd74355e690fa5)
+
 # Using MongoDB Stitch to Create a Microservices API Library
 
 [Stitch](https://www.mongodb.com/cloud/stitch) is MongoDB's Backend as a Service offering - that is, Stitch can be the single point of contact for developers accessing your platform (whatever that platform may be). 
