@@ -12,12 +12,11 @@ build:
 push-to-dockerhub:
   steps:
     - internal/docker-push:
+        registry: https://registry.hub.docker.com/v2
+        repository: wbleonard/stitch-api-react
         username: $USERNAME
         password: $PASSWORD
         tag: development
         working-dir: /pipeline/source # For some reason this isn't the default
         cmd: "npm start"
         ports: "3000"
-        repository: wbleonard/stitch-api-react
-        registry: https://registry.hub.docker.com
-
