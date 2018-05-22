@@ -8,7 +8,7 @@ build:
     - npm-install
 
 # This pipeline will be chained to start at the end of a build pipeline in the
-# Wercker Web Workflows editor.
+# Wercker Web Workflows editor. 
 push-to-dockerhub:
   steps:
     - internal/docker-push:
