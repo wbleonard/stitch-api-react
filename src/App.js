@@ -15,13 +15,53 @@ stitchClientPromise.then(stitchClient => {
 });
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentTime: new Date().toLocaleTimeString(),
+      indoorTemp: 72,
+      outdoorTemp: 88
+    };
+    this.timer = this.timer.bind(this);
+  }
+
+  componentDidMount () {
+    var internvalId = setInterval(this.timer, 1000);
+  }
+
+  timer () {
+    this.setState( { currentTime: new Date().toLocaleTimeString()})
+    this.getTemps().then(temps => this.setState({ indoorTemp: Math.round(temps.indoorTemp), outdoorTemp: Math.round(temps.outdoorTemp) }))
+      .catch(e => {
+        console.log('error', e)
+      });
+  }
+
+  getTemps() {
+    console.log("Entered getTemps()");
+    return stitchClientPromise.then(stitchClient =>
+      stitchClient.executeFunction("getTemperature")
+    ).then(result => {
+      console.log('success getting temperature data: ', result)
+      return result;
+    })
+      .catch(e => {
+        console.log('error', e)
+        return []
+      });
+  }
+
   render() {
     return (
       <div>
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to the Sports Store</h1>
+            <h1 className="App-title">Welcome to the MongoDB Sports Store</h1>
+            <h3>Ponte Vedra Beach, FL</h3>
+            <h4>It is {this.state.currentTime}.</h4>
+            <h4>The current temperature is {this.state.outdoorTemp} °F outside and a comfortable {this.state.indoorTemp} °F inside our store.</h4>
           </header>
           <p></p>
         </div>
