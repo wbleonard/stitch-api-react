@@ -209,6 +209,7 @@ class ProductTable extends React.Component {
           <tr>
             <th>Name</th>
             <th>Price</th>
+            <th>Image</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -243,10 +244,12 @@ class ProductRow extends React.Component {
       <tr>
         <td>{name}</td>
         <td>{product.price}</td>
+        <td><a href={product.image}><img src={product.image} height="42" width="42"></img></a></td>        
       </tr>
     );
   }
 }
+
 
 const PRODUCTS = [
   { category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football' },
