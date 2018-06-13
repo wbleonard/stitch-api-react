@@ -6,6 +6,27 @@
 
 Here I'm going to demonstrate how Stitch's serverless framework can be used to expose APIs, so you can shield your development community from the nuances of your backend.
 
+ ## Architecture
+I started with the [Thinking in React](https://reactjs.org/docs/thinking-in-react.html) sample client and modified it to pull the data dynamically from MongoDB. First let's start with an overview of the architecture:
+ 
+ ![](images/architecture.png)
+
+ 1. An [Electric Imp](https://www.electricimp.com/) calls a [Stitch function](https://docs.mongodb.com/stitch/functions/) `Imp_Write()` every 2 seconds with the temperature inside the store.
+ 2. The `Imp_Write()` function calls the [Dark Sky](https://darksky.net/dev) API to get the temperature outside the store and records both the indoor and outdoor temperatures to MongoDB.
+ 3. When the [MongoDB Sports Store](http://ec2-54-80-43-147.compute-1.amazonaws.com:3000/) is loaded, it uses the [Stitch JavaScript SDK](https://s3.amazonaws.com/stitch-sdks/js/docs/master/index.html) to call the `getTemperature()` Stitch function, which reads the most recent record in the `Imp.TempData` collection.
+ 4. When a search is performed, the `getProductsByName()` Stitch function is called, which uses the search text to filter the relevant products from the `store.products` collection.
+ 5. [Amazon S3](https://aws.amazon.com/s3) is used to store the binary images. Although the images could have easily been stored in MongoDB, I wanted to show the popular use case where binary data is offloaded to a service like S3.
+
+ The MongoDB Sports Store UI, which is written in [React](https://reactjs.org/), has now been abstracted from Electric Imp, Dark Sky and even the MongoDB database. As long as APIs exist to `getTemperature()` and `getProductsByName()`, the Sports Store is not dependant on the underlying technologies.
+ 
+ ## Advance To Go
+
+If you just want to see the app in action, simply clone this repository and run the app:
+
+    git clone https://github.com/wbleonard/stitch-api-react.git
+    npm install
+    npm start
+
 ## Creating the API
 
 My first API will be to get products by name:
@@ -358,13 +379,8 @@ And now our React Sports Store is dynamic, calling an API to refresh its content
 
  Does it make sense to call the API on every keystroke, maybe not, but I wanted to demonstrate the performance of Stitch. Obviously, this is a very small data set, but the point here was the to lay the groundwork for how Stitch could be the platform for your microservice APIs.
 
- ## Advance To Go
-
-If you just want to see the app in action, simply clone this repository and run the app:
-
-    git clone https://github.com/wbleonard/stitch-api-react.git
-    npm install
-    npm start
+## Temperature API
+For implementing the temperature data, follow the [IoT Temperature Tracker](https://docs.mongodb.com/stitch/tutorials/temperature-tracker/) tutorial.
  
  ## Troublshooting
 

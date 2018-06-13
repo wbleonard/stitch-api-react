@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { StitchClientFactory } from "mongodb-stitch";
 
+
 // Set-up Stitch Connection
 const stitchClientPromise = StitchClientFactory.create("sportsstore-skxjg");
 
@@ -244,7 +245,7 @@ class ProductRow extends React.Component {
       <tr>
         <td>{name}</td>
         <td>{product.price}</td>
-        <td><a href={product.image}><img src={product.image} height="42" width="42"></img></a></td>        
+        <td><a href={product.image}><img id="myImg" src={product.image} height="42" width="42"></img></a></td>
       </tr>
     );
   }
