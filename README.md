@@ -7,18 +7,29 @@
 Here I'm going to demonstrate how Stitch's serverless framework can be used to expose APIs, so you can shield your development community from the nuances of your backend.
 
  ## Architecture
-I started with the [Thinking in React](https://reactjs.org/docs/thinking-in-react.html) sample client and modified it to pull the data dynamically from MongoDB. First let's start with an overview of the architecture:
+I started with the [Thinking in React](https://reactjs.org/docs/thinking-in-react.html) sample client and modified it to pull the data dynamically from MongoDB. First let's start with an overview of the architecture, considering it both from the front-end developer's and back-end developer's points of view:
  
  ![](images/architecture.png)
 
- 1. An [Electric Imp](https://www.electricimp.com/) calls a [Stitch function](https://docs.mongodb.com/stitch/functions/) `Imp_Write()` every 2 seconds with the temperature inside the store.
- 2. The `Imp_Write()` function calls the [Dark Sky](https://darksky.net/dev) API to get the temperature outside the store and records both the indoor and outdoor temperatures to MongoDB.
- 3. When the [MongoDB Sports Store](http://ec2-54-80-43-147.compute-1.amazonaws.com:3000/) is loaded, it uses the [Stitch JavaScript SDK](https://s3.amazonaws.com/stitch-sdks/js/docs/master/index.html) to call the `getTemperature()` Stitch function, which reads the most recent record in the `Imp.TempData` collection.
- 4. When a search is performed, the `getProductsByName()` Stitch function is called, which uses the search text to filter the relevant products from the `store.products` collection.
- 5. [Amazon S3](https://aws.amazon.com/s3) is used to store the binary images. Although the images could have easily been stored in MongoDB, I wanted to show the popular use case where binary data is offloaded to a service like S3.
-
- The MongoDB Sports Store UI, which is written in [React](https://reactjs.org/), has now been abstracted from Electric Imp, Dark Sky and even the MongoDB database. As long as APIs exist to `getTemperature()` and `getProductsByName()`, the Sports Store is not dependant on the underlying technologies.
+ ### Front-end Developer
+ The front-end developer is conversant in HTML, CSS and JavaScript, along with frameworks like React. Ideally, this developer just wants to use an API to access whatever resources are needed. In this example, the front-end developer has been provided 2 APIs and uses the [Stitch JavaScript SDK](https://s3.amazonaws.com/stitch-sdks/js/docs/master/index.html) to call the these functions:
  
+ 1. `getTemperature()` - to get the current temperature inside and outside the store.
+ 2. `getProductsByName()` - to get the products related to the customer's search criteria.
+
+This developer doesn't need to worry about the implementation details of how the temperatures are determined, or where the product catalog is stored.
+
+### Back-end Developer
+The back-end developer provides the APIs used by the front-end developer(s). In this case, she has developed the following:
+
+3. A `getTemperature()` API - a [Stitch function](https://docs.mongodb.com/stitch/functions/) that reads the most recent record in the `Imp.TempData` collection.
+
+4. A `getProductsByName()` API - a Stitch function that uses the search text to filter the relevant products from the `store.products` collection. The product images are stored on AWS S3. Although the images could have easily been stored in MongoDB, I wanted to show the popular use case where binary data is offloaded to a service like S3.
+
+5. An `Imp_Write()` function - this function is called every 2 seconds by an [Electric Imp](https://www.electricimp.com/).  In addition to capturing the indoor temperature, the `Imp_Write()` function also calls a [Dark Sky](https://darksky.net/dev) API to get the temperature outside the store and records both the indoor and outdoor temperatures to the `Imp.TempData` MongoDB collection.
+
+6. A `sendInventoryAlert()` function initiated by an `inventoryTrigger`. The trigger will fire when a product is updated, and notify the customer that the product has gone in or out of stock.
+
  ## Advance To Go
 
 If you just want to see the app in action, simply clone this repository and run the app:
